@@ -1,0 +1,71 @@
+<?php
+require_once 'connec.php';
+
+$pdo = new \PDO(DSN, USER, PASS);
+
+
+$query = "SELECT * FROM friend";
+$statement = $pdo->query($query);
+$friends = $statement->fetchall();
+
+
+
+foreach ($friends as $ami) {
+    echo "<li>".$ami ['firstname'].' '. $ami ['lastname'] ."</li>" ;
+}
+
+$errors = [];
+if ($_POST) {
+    $firstname = $_POST['firstname'];
+    $lastname = $_POST['lastname'];
+
+    if (empty($firstname)) {
+        $errors['firstname'] = 'username cannot be empty';
+    }
+    if ($firstname)
+
+
+    if (empty($lastname)) {
+        $errors['lastname'] = 'username cannot be empty';
+    }
+
+    $query = "INSERT INTO friend (firstname, lastname) VALUES (:firstname, :lastname)";
+    $statement = $pdo->prepare($query);
+    $statement->bindValue(':firstname', $firstname);
+    $statement->bindValue(':lastname', $lastname);
+    $statement->execute();
+}
+
+/*
+$query = "INSERT INTO friend (firstname, lastname) VALUES ('$firstname', '$lastname')";
+$statement = $pdo->exec($query);*/
+
+?>
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Article</title>
+</head>
+<body>
+<br>
+<form action="" method="post">
+    <div>
+        <label for="firstname">Firstname :</label>
+        <input  type="text"  id="firstname"  name="firstname">
+        <?php if (isset($errors['firstname'])) { echo '<p style="color: red;">'.$errors['firstname'].'</p>';} ?></p>
+    </div>
+    <div>
+        <label  for="lastname">lastname :</label>
+        <input  type="text"  id="lastname"  name="lastname">
+        <?php if (isset($errors['lastname'])) { echo '<p style="color: red;">'.$errors['lastname'].'</p>';} ?></p>
+    </div>
+
+    <div  class="button">
+        <button  type="submit">Submit</button>
+    </div>
+</form>
+</body>
+</html>
