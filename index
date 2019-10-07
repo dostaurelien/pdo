@@ -7,10 +7,6 @@ $query = "SELECT * FROM friend";
 $statement = $pdo->query($query);
 $friends = $statement->fetchall();
 
-foreach ($friends as $ami) {
-    echo "<li>".$ami ['firstname'].' '. $ami ['lastname'] ."</li>" ;
-}
-
 $errors = [];
 if ($_POST)
 {
@@ -25,20 +21,16 @@ if ($_POST)
         $errors['lastname'] = 'username cannot be empty';
     }
 
-
     $query = "INSERT INTO friend (firstname, lastname) VALUES (:firstname, :lastname)";
     $statement = $pdo->prepare($query);
     $statement->bindValue(':firstname', $firstname, \PDO::PARAM_STR);
     $statement->bindValue(':lastname', $lastname, \PDO::PARAM_STR);
     $statement->execute();
 
-    header('Location: redirect.php');
+    header('Location: http://google.fr');
     exit;
-
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html>
@@ -47,6 +39,17 @@ if ($_POST)
 </head>
 <body>
 <br>
+
+<ul>
+    <?php
+        foreach ($friends as $ami)  {
+           echo '<li>'.$ami['firstname'].' '.$ami['lastname'].'</li>';
+        }
+    ?>
+</ul>
+
+
+
 <form action="" method="post">
     <div>
         <label for="firstname">Firstname :</label>
