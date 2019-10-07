@@ -3,43 +3,39 @@ require_once 'connec.php';
 
 $pdo = new \PDO(DSN, USER, PASS);
 
-
 $query = "SELECT * FROM friend";
 $statement = $pdo->query($query);
 $friends = $statement->fetchall();
-
-
 
 foreach ($friends as $ami) {
     echo "<li>".$ami ['firstname'].' '. $ami ['lastname'] ."</li>" ;
 }
 
 $errors = [];
-if ($_POST) {
+if ($_POST)
+{
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
 
-    if (empty($firstname)) {
+    if (empty ($firstname) || (strlen ($firstname)>= 45)){
         $errors['firstname'] = 'username cannot be empty';
     }
-    if ($firstname)
 
-
-    if (empty($lastname)) {
+    if (empty ($_POST['lastname']) || (strlen ($_POST['lastname']))>= 45){
         $errors['lastname'] = 'username cannot be empty';
     }
 
+
     $query = "INSERT INTO friend (firstname, lastname) VALUES (:firstname, :lastname)";
     $statement = $pdo->prepare($query);
-    $statement->bindValue(':firstname', $firstname);
-    $statement->bindValue(':lastname', $lastname);
+    $statement->bindValue(':firstname', $firstname, \PDO::PARAM_STR);
+    $statement->bindValue(':lastname', $lastname, \PDO::PARAM_STR);
     $statement->execute();
+
+    header('Location: redirect.php');
+    exit;
+
 }
-
-/*
-$query = "INSERT INTO friend (firstname, lastname) VALUES ('$firstname', '$lastname')";
-$statement = $pdo->exec($query);*/
-
 ?>
 
 
